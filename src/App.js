@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import supabase from "../supabaseClient";  // Import shared instance
+import supabase from "./supabaseClient";  // Import shared instance
 import ResetPassword from "./components/ResetPassword";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
