@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../supabaseClient";  // Import shared instance
 import ResetPassword from "./components/ResetPassword";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Form from "./components/Form";
 import Upload from "./components/Upload";
 
-// Initialize Supabase client
-const supabase = createClient(
-    "https://yzqvmbqldetynnuovoaa.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6cXZtYnFsZGV0eW5udW92b2FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzNDQ5MDUsImV4cCI6MjA1NTkyMDkwNX0.RqKlTYb99bDHc9YrJaVpl9KRkCLg7FPDOxjperIu5wU"
-);
+
 
 function App() {
     const [user, setUser] = useState(null);
