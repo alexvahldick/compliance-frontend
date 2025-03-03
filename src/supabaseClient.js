@@ -1,4 +1,4 @@
-import supabase from "../supabaseClient";
+import supabase from "./supabaseClient";
 
 // Load environment variables
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
