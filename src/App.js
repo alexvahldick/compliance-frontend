@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import supabase from "./supabaseClient";  // Import shared instance
 import ResetPassword from "./components/ResetPassword";
 import Login from "./components/Login";
+import Signup from "./components/Signup";  // ✅ Import Signup
 import Dashboard from "./components/Dashboard";
 import Form from "./components/Form";
 import Upload from "./components/Upload";
-
-
 
 function App() {
     const [user, setUser] = useState(null);
@@ -43,6 +42,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+                <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} /> {/* ✅ Added Signup Route */}
                 <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
                 <Route path="/form" element={user ? <Form /> : <Navigate to="/" />} />
                 <Route path="/upload" element={user ? <Upload /> : <Navigate to="/" />} />
@@ -54,11 +54,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
