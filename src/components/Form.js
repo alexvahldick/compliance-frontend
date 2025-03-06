@@ -7,7 +7,7 @@ const Form = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post("https://compliance-backend-x0r6.onrender.com/submit-form", {
+        await axios.post("https://compliance-backend-x0r6.onrender.com/submit-form", {
         userId: user.id,
         formData,
       });

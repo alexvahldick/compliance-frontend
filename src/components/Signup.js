@@ -6,20 +6,21 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    setError(null); // ✅ Reset error state before request
+    setSuccess(null); // ✅ Reset success message before request
+
+    const { error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
       setError(error.message);
     } else {
-      navigate("/app"); // ✅ Redirect to login page after signup
+      setSuccess("Signup successful! Redirecting...");
+      setTimeout(() => navigate("/app"), 2000); // ✅ Delay redirect for UX
     }
   };
 
@@ -46,6 +47,7 @@ const Signup = () => {
         <button type="submit" style={styles.button}>Sign Up</button>
       </form>
       {error && <p style={styles.error}>{error}</p>}
+      {success && <p style={styles.success}>{success}</p>}
     </div>
   );
 };
@@ -83,6 +85,10 @@ const styles = {
   },
   error: {
     color: "red",
+    marginTop: "10px",
+  },
+  success: {
+    color: "green",
     marginTop: "10px",
   },
 };
