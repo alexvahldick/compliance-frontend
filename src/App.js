@@ -41,7 +41,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+                <Route path="/app" element={user ? <Navigate to="/dashboard" /> : <Login />} />
                 <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} /> {/* ✅ Added Signup Route */}
                 <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
                 <Route path="/form" element={user ? <Form /> : <Navigate to="/" />} />
