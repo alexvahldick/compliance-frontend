@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import supabase from "./supabaseClient";
 import ResetPassword from "./components/ResetPassword";
 import Login from "./components/Login";
@@ -12,37 +12,34 @@ function App() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // ✅ Restore session on app load
     useEffect(() => {
         const restoreSession = async () => {
-            const { data: { user }, error } = await supabase.auth.getUser();
-
-            console.log("🔍 Restoring session:", user);
-
-            if (error) {
-                console.warn("❌ Error restoring session:", error.message);
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error || !session) {
+                console.warn("⚠️ No active session found.");
+                setUser(null);
+            } else {
+                console.log("✅ Active session found:", session);
+                setUser(session.user);
             }
-
-            setUser(user || null);
             setLoading(false);
         };
 
         restoreSession();
 
+        // ✅ Listen for auth changes
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log("🔄 Supabase Auth Event:", event, session);
-            
-            if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-                console.log("✅ User is signed in.");
-                setUser(session?.user || null);
-            } else if (event === "SIGNED_OUT") {
-                console.log("❌ User is logged out. Resetting state.");
+            console.log(`🔄 Supabase Auth Event: ${event}`, session);
+            if (session) {
+                setUser(session.user);
+            } else {
+                console.warn("❌ User signed out. Resetting state.");
                 setUser(null);
-                localStorage.removeItem("sb-session");
-                sessionStorage.clear();
             }
         });
 
-        return () => authListener.subscription?.unsubscribe();
+        return () => authListener.subscription.unsubscribe();
     }, []);
 
     if (loading) {
@@ -50,17 +47,15 @@ function App() {
     }
 
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
-                <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
-                <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" replace />} />
-                <Route path="/form" element={user ? <Form /> : <Navigate to="/" replace />} />
-                <Route path="/upload" element={user ? <Upload /> : <Navigate to="/" replace />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-        </Router>
+        <Routes>
+            <Route path="/app" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+            <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} />
+            <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
+            <Route path="/form" element={user ? <Form /> : <Navigate to="/" />} />
+            <Route path="/upload" element={user ? <Upload /> : <Navigate to="/" />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
     );
 }
 
